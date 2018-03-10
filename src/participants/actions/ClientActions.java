@@ -1,6 +1,6 @@
 package participants.actions;
 
-import participants.Client;
+import participants.client.Client;
 
 public class ClientActions {
     private Client client;
