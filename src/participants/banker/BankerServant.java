@@ -18,7 +18,7 @@ public class BankerServant implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("[DEBUG Banker " + this.id + "] Started conversation with ");
+        System.out.println("[DEBUG Banker " + this.id + "] Started conversation with broker");
 
     }
 }

@@ -12,7 +12,7 @@ import java.util.Map;
 public class Client {
     public static final Integer CLIENT_PORT = 7002;
 
-    private Socket brokerSocket;
+    private final Socket brokerSocket;
 
     private ClientActions clientActions;
     private ClientItems items;
@@ -22,14 +22,22 @@ public class Client {
         clientActions = new ClientActions(this);
         items = new ClientItems();
         itemsSelected = new HashMap<>();
-
         brokerSocket = new Socket(Broker.BROKER_IP, Broker.BROKER_PORT);
 
         System.out.println("[DEBUG] Client instantiated.");
     }
 
-    public void start() {
+    public void start() throws IOException {
         System.out.println("[DEBUG] Client started.");
+        Boolean isToContinue = true;
+
+        while(isToContinue) {
+            clientActions.printoutMenuOptions();
+            String option = clientActions.scanForUserInput();
+
+            isToContinue = clientActions.processMenuOption(option);
+        }
+
     }
 
     public static void main(String[] args) {
@@ -39,5 +47,25 @@ public class Client {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public ClientItems getItems() {
+        return items;
+    }
+
+    public void setItems(ClientItems items) {
+        this.items = items;
+    }
+
+    public Map<String, Double> getItemsSelected() {
+        return itemsSelected;
+    }
+
+    public void setItemsSelected(Map<String, Double> itemsSelected) {
+        this.itemsSelected = itemsSelected;
+    }
+
+    public Socket getBrokerSocket() {
+        return brokerSocket;
     }
 }
