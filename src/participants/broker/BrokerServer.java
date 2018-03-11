@@ -9,13 +9,13 @@ public class BrokerServer {
     private Broker broker;
     private static Integer clientsServed = 0;
 
-    public BrokerServer() throws IOException {
+    private BrokerServer() throws IOException {
         this.brokerAcceptSocket = new ServerSocket(Broker.BROKER_PORT);
         this.broker = new Broker();
     }
 
 
-    public void start() {
+    private void start() {
         System.out.println("[DEBUG] Broker started.");
         while (true) {
             try {
@@ -26,13 +26,6 @@ public class BrokerServer {
                     new Thread(new BrokerBankerTransactionServant()).run();
                 }
                 new Thread(new BrokerClientTransactionServant(broker, clientSocket)).run();
-
-                try {
-                    System.out.println("Receiving info.");
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
             } catch (Exception e) {
                 e.printStackTrace();

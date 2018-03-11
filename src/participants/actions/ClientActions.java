@@ -1,9 +1,12 @@
 package participants.actions;
 
+import participants.broker.Broker;
 import participants.client.Client;
 
 import java.io.IOException;
-import java.util.Map;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientActions {
@@ -15,8 +18,8 @@ public class ClientActions {
         scanner = new Scanner(System.in);
     }
 
-    public Boolean processMenuOption(String option) throws IOException {
-        switch(option){
+    public Boolean processMenuOption(String option) throws IOException, ClassNotFoundException {
+        switch (option) {
             case "Buy":
                 printoutClientItemsWIthPayment();
                 return true;
@@ -24,7 +27,7 @@ public class ClientActions {
                 printoutItemsPicked();
                 return true;
             case "Send requests":
-                sendRequests(client.getItemsSelected());
+                sendRequests();
                 return true;
             case "Quit":
                 exit();
@@ -35,7 +38,7 @@ public class ClientActions {
         }
     }
 
-    public void printoutItemsPicked() {
+    private void printoutItemsPicked() {
         this.client.getItemsSelected().forEach((item, price) -> System.out.println(
                 "Name : " + item + " => " + price));
 
@@ -43,7 +46,7 @@ public class ClientActions {
 
         String option = scanForUserInput();
 
-        switch(option){
+        switch (option) {
             case "Remove item":
                 String itemToRemove = scanForUserInput();
                 client.getItemsSelected().remove(itemToRemove);
@@ -59,15 +62,15 @@ public class ClientActions {
                 break;
         }
     }
-    public void defaultMenu(){
+
+    private void defaultMenu() {
         System.out.println("That wasn't a valid option! Pick again.");
     }
 
-    public void exit() throws IOException {
-        client.getBrokerSocket().close();
+    private void exit() {
     }
 
-    public void printoutClientItemsWIthPayment() {
+    private void printoutClientItemsWIthPayment() {
         this.client.getItems().items.forEach((item, price) -> System.out.println(
                 "Name : " + item + " => " + price));
         System.out.println("\n\n Select an item by name\n\n");
@@ -77,7 +80,7 @@ public class ClientActions {
         if (client.getItems().items.containsKey(option)) {
             System.out.println("\n Thank you! Item added to list!");
 
-            Double itemPrice = client.getItems().items.get(option);
+            Integer itemPrice = client.getItems().items.get(option);
 
             client.getItemsSelected().put(option, itemPrice);
 
@@ -103,7 +106,15 @@ public class ClientActions {
 
     }
 
-    public void sendRequests(Map<String, Double> itemsSelected) {
-        System.out.println("Sending requests");
+    private void sendRequests() throws IOException {
+        Socket socket = new Socket(Broker.BROKER_IP, Broker.BROKER_PORT);
+
+        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+
+        outputStream.writeInt(1);
+
+        System.out.println("Sending requests\n\n");
+
     }
 }

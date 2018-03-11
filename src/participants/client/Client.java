@@ -5,6 +5,8 @@ import participants.broker.Broker;
 import participants.payments.ClientItems;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,22 +14,20 @@ import java.util.Map;
 public class Client {
     public static final Integer CLIENT_PORT = 7002;
 
-    private final Socket brokerSocket;
-
     private ClientActions clientActions;
     private ClientItems items;
-    private Map<String, Double> itemsSelected;
+    private Map<String, Integer> itemsSelected;
 
-    public Client() throws IOException {
+
+    private Client() {
         clientActions = new ClientActions(this);
         items = new ClientItems();
         itemsSelected = new HashMap<>();
-        brokerSocket = new Socket(Broker.BROKER_IP, Broker.BROKER_PORT);
 
         System.out.println("[DEBUG] Client instantiated.");
     }
 
-    public void start() throws IOException {
+    private void start() {
         System.out.println("[DEBUG] Client started.");
         Boolean isToContinue = true;
 
@@ -35,7 +35,11 @@ public class Client {
             clientActions.printoutMenuOptions();
             String option = clientActions.scanForUserInput();
 
-            isToContinue = clientActions.processMenuOption(option);
+            try {
+                isToContinue = clientActions.processMenuOption(option);
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -57,15 +61,11 @@ public class Client {
         this.items = items;
     }
 
-    public Map<String, Double> getItemsSelected() {
+    public Map<String, Integer> getItemsSelected() {
         return itemsSelected;
     }
 
-    public void setItemsSelected(Map<String, Double> itemsSelected) {
+    public void setItemsSelected(Map<String, Integer> itemsSelected) {
         this.itemsSelected = itemsSelected;
-    }
-
-    public Socket getBrokerSocket() {
-        return brokerSocket;
     }
 }
