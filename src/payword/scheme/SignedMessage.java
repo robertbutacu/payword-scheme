@@ -1,8 +1,9 @@
 package payword.scheme;
 
+import java.io.Serializable;
 import java.security.Signature;
 
-public class SignedMessage {
+public class SignedMessage implements Serializable{
     private byte[] message;
     private Signature signature;
 
@@ -23,5 +24,9 @@ public class SignedMessage {
 
     public void setSignature(Signature signature) {
         this.signature = signature;
+    }
+
+    public SignedMessage deserializeMessage(String serializedMessage) {
+        return null;
     }
 }

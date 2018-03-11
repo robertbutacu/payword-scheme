@@ -7,6 +7,7 @@ import java.net.Socket;
 public class BrokerServer {
     private ServerSocket brokerAcceptSocket;
     private Broker broker;
+    private static Integer clientsServed = 0;
 
     public BrokerServer() throws IOException {
         this.brokerAcceptSocket = new ServerSocket(Broker.BROKER_PORT);
@@ -19,7 +20,12 @@ public class BrokerServer {
         while (true) {
             try {
                 Socket clientSocket = brokerAcceptSocket.accept();
-                new BrokerClientTransactionServant(broker, clientSocket).run();
+                clientsServed += 1;
+
+                if(clientsServed % 10 == 0) {
+                    new Thread(new BrokerBankerTransactionServant()).run();
+                }
+                new Thread(new BrokerClientTransactionServant(broker, clientSocket)).run();
 
                 try {
                     System.out.println("Receiving info.");

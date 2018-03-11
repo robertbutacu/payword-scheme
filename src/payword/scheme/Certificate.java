@@ -1,5 +1,7 @@
 package payword.scheme;
 
+import participants.broker.UserRegistration;
+
 import java.security.PublicKey;
 import java.util.Date;
 
@@ -10,7 +12,7 @@ public class Certificate {
     private PublicKey userPublicKey;
     private Date expiryDate;
     private String serial;
-    private String credit;
+    private Integer credit;
 
     public Certificate(String brokerIdentity,
                        String userIdentity,
@@ -18,7 +20,7 @@ public class Certificate {
                        PublicKey userPublicKey,
                        Date expiryDate,
                        String serial,
-                       String credit) {
+                       Integer credit) {
         this.brokerIdentity = brokerIdentity;
         this.userIdentity = userIdentity;
         this.brokerPublicKey = brokerPublicKey;
@@ -26,6 +28,17 @@ public class Certificate {
         this.expiryDate = expiryDate;
         this.serial = serial;
         this.credit = credit;
+    }
+
+    public static Certificate createCertificate(String brokerIdentity, PublicKey brokerPublicKey,
+                                                UserRegistration user) {
+        return new Certificate(brokerIdentity,
+                user.getName(),
+                brokerPublicKey,
+                user.getPublicKey(),
+                user.getExpiryDate(),
+                user.getSerial(),
+                user.getCreditLimit());
     }
 
 
@@ -77,11 +90,11 @@ public class Certificate {
         this.serial = serial;
     }
 
-    public String getCredit() {
+    public Integer getCredit() {
         return credit;
     }
 
-    public void setCredit(String credit) {
+    public void setCredit(Integer credit) {
         this.credit = credit;
     }
 }

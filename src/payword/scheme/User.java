@@ -13,4 +13,16 @@ public class User extends Participant {
         this.password = password;
         this.creditCardNumber = creditCardNumber;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
 }

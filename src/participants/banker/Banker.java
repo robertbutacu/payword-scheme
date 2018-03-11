@@ -3,8 +3,6 @@ package participants.banker;
 import participants.actions.BankerActions;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class Banker {
     public static final Integer BANKER_PORT = 8001;
